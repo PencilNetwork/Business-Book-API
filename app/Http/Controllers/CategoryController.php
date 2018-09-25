@@ -17,6 +17,11 @@ class CategoryController extends Controller
 
         return CategoryResource::collection(Category::all())  ;
     }
+    public function index1 (){
+   
+
+        return CategoryResource::collection(Category::all())  ;
+    }
     // return all provinces
     public function provinces(){
         return json_encode(ProvinceResource::collection(Province::all()) ,JSON_UNESCAPED_UNICODE) ;
