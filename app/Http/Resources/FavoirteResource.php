@@ -14,12 +14,14 @@ class FavoirteResource extends Resource
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'bussines_id' => $this->bussines_id,
-            'searcher_id' => $this->searcher_id,
-            // 'created_at' => (string) $this->created_at,
-            // 'updated_at' => (string) $this->updated_at,
+        return
+        [   
+                'id' => $this->id,
+                'bussines_id' => $this->bussines_id,
+                'searcher_id' => $this->searcher_id,
+                'bussines_details' => $this->get_bussines($this->bussines_id),
+                // 'created_at' => (string) $this->created_at,
+                // 'updated_at' => (string) $this->updated_at,
         ];
         // return parent::toArray($request);
     }

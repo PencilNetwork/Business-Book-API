@@ -12,9 +12,9 @@ class CreateInterestsTable extends Migration
         Schema::create('interests', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('searcher_id')->unique();
-            $table->string('categories');
-            $table->string('city');
-            $table->string('regoins');
+            $table->string('categories_ids'); // categories ids 
+            $table->string('city_id'); // city id 
+            $table->string('regoins_ids');  // regoins ids 
             $table->timestamps();
         });
     }

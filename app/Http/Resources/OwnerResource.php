@@ -16,6 +16,7 @@ class OwnerResource extends Resource
     public function toArray($request)
     {
         return [
+            'data'=> [
             'owner_id'    => $this->id,
             'name'  => $this->name,
             'email' => $this->email,
@@ -26,7 +27,7 @@ class OwnerResource extends Resource
             'bussines' => $this->bussines,
             // 'created_at' => (string) $this->created_at,
             // 'updated_at' => (string) $this->updated_at,
-        ];
+        ]];
         // return parent::toArray($request);
     }
 }

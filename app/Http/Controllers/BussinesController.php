@@ -15,6 +15,7 @@ class BussinesController extends Controller
     //show, edit 
     public function show (Bussines $bussines){
         $bussines= json_encode(new BussinesResource($bussines), JSON_UNESCAPED_UNICODE);
+        // $bussines= new BussinesResource($bussines);
         if($bussines){
             return $bussines;
         }else {
@@ -23,7 +24,9 @@ class BussinesController extends Controller
     }
 
     public function edit (Bussines $bussines){
-        $bussines= new BussinesResource($bussines);
+        
+
+       
         if($bussines){
             return view('bussines.edit',compact("bussines")); 
         }else {
@@ -39,8 +42,8 @@ class BussinesController extends Controller
             'description' => 'required|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'contact_number' => 'required',
-            'city' => 'required',
-            // 'regoin' => 'required',
+            'city_id' => 'required',
+            // 'regoin_id' => 'required',
             'address' => 'required',
             'langitude' => 'required',
             'lattitude' => 'required',
@@ -66,8 +69,11 @@ class BussinesController extends Controller
         if($b = Bussines::create($bussines)){
             $response = [
                 'flag'=>1,
-                'data'=>new BussinesResource($b)
+                'data'=> json_encode( new BussinesResource($b ), JSON_UNESCAPED_UNICODE)
             ];
+        }else {
+            return response()->json([ 'flage'=>'0']);
+        
         }
         return response()->json($response,201); 
         
@@ -84,8 +90,8 @@ class BussinesController extends Controller
             'description' => 'required|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
             'contact_number' => 'required',
-            'city' => 'required',
-            // 'regoin' => 'required',
+            'city_id' => 'required',
+            // 'regoin_id' => 'required',
             'address' => 'required',
             'langitude' => 'required',
             'lattitude' => 'required',
@@ -104,8 +110,6 @@ class BussinesController extends Controller
             request()->logo->move(public_path('images'), $imageName);
             $inputs['logo']  = $imageName ; 
         }
-        // dd('test') ; 
-
         if($bussines->update($inputs)){
             return response()->json(['flag'=>'1'] , 201);
         }else {

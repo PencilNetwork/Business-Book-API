@@ -6,8 +6,8 @@
     <input type = 'text' name = 'description'  value="{{ $bussines->description }}"/>
     <input name = 'logo' type = 'file' />
     <input type = 'text' name = 'contact_number' value="{{ $bussines->contact_number }}" />
-    <input type = 'text' name = 'city' value="{{ $bussines->city }}"/>
-    <input type = 'text' name = 'regoin' value="{{ $bussines->regoin }}"/>
+    <input type = 'text' name = 'city_id' value="{{ $bussines->city_id }}"/>
+    <input type = 'text' name = 'regoin_id' value="{{ $bussines->regoin_id }}"/>
     <input type = 'text' name = 'address' value="{{$bussines->address }}"/>
     <input type = 'text' name = 'langitude' value="{{ $bussines->langitude }}"/>
     <input type = 'text' name = 'lattitude' value="{{ $bussines->lattitude }}"/>

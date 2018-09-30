@@ -15,13 +15,12 @@ class SearcherController extends Controller
 {
     //
     public function login(Request $request){
-        // dd($request->all()); 
         $request->validate([
             'social_id' => 'required',
         ]);
         $searcher= DB::table('searchers')->where('social_id',$request->social_id)->first(); 
         if($searcher){
-            return new SearcherResource($searcher) ; 
+            return json_encode(new SearcherResource($searcher)  ,JSON_UNESCAPED_UNICODE);
         }else{
             $validator = \Validator::make($request->all(), [
                 'name' => 'required',
@@ -33,25 +32,23 @@ class SearcherController extends Controller
             if ($validator->fails()) {
                 return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
             }
-
-           if( $searcher =Searcher::create($request->all())){
-                return new SearcherResource($searcher) ; 
-           }else {
-                return response()->json([ 'flag'=>'0'], 400 );
-           }
-            
+            if( $searcher =Searcher::create($request->all())){
+                return json_encode(new SearcherResource($searcher)  ,JSON_UNESCAPED_UNICODE); 
+            }else{
+                    return response()->json([ 'flag'=>'0'], 400 );
+            }
         }
     }
 
     public function default_bussines_search(Request $request , $searcher_id){
         $interest = Interest::where('searcher_id',$searcher_id)->get(); 
         if(!$interest->isEmpty()){
-            $regoins = explode(',',$interest[0]->regoins);
-            $categories = explode(',',$interest[0]->categories);
-            $city = $interest[0]->city; 
-            $bussines = Bussines::where('city',$city)->
-                whereIn('category_id',$categories)->
-                whereIn('regoin',$regoins)->get();
+            $regoins_ids = explode(',',$interest[0]->regoins_ids);
+            $categories_ids = explode(',',$interest[0]->categories_ids);
+            $city_id = $interest[0]->city_id; 
+            $bussines = Bussines::where('city_id',$city_id)->
+                whereIn('category_id',$categories_ids)->
+                whereIn('regoin_id',$regoins_ids)->get();
             
             return json_encode(  BussinesResource::collection($bussines),JSON_UNESCAPED_UNICODE); 
             
@@ -64,28 +61,28 @@ class SearcherController extends Controller
     public function test_bussines_search(){
         return view('searcher.search');
     }
-    // search by(name,province, regoins , category)
+    // search by(name,city, regoins , category)
     public function search_bussines(Request $request){
         //only bussiness name  
-        if($request->bussines_name && !$request->category_id && !$request->province_name && !$request->regoin_name){
+        if($request->bussines_name && !$request->category_id && !$request->city_id && !$request->regoin_id){
             $bussines = Bussines::where('name','like','%'.$request->bussines_name.'%')->get();
             // dd($bussines); 
             return json_encode(BussinesResource::collection($bussines), JSON_UNESCAPED_UNICODE);
         }// only category
-        elseif($request->category_id && !$request->bussines_name && !$request->province_name && !$request->regoin_name){
+        elseif($request->category_id && !$request->bussines_name && !$request->city_id && !$request->regoin_id){
             $bussines = Bussines::where('category_id',$request->category_id)->get();
             // dd($bussines); 
             return json_encode(BussinesResource::collection($bussines), JSON_UNESCAPED_UNICODE);
         }
         // all fields
-        elseif($request->province_name && $request->category_id && $request->regoin_name && $request->bussines_name){
-            $bussines = Bussines::where('city',$request->province_name)->Where('regoin',$request->regoin_name)->Where('category_id',$request->category_id)->Where('name','like','%'.$request->name.'%')->get();
+        elseif($request->city_id && $request->category_id && $request->regoin_id && $request->bussines_name){
+            $bussines = Bussines::where('city_id',$request->city_id)->Where('regoin_id',$request->regoin_id)->Where('category_id',$request->category_id)->Where('name','like','%'.$request->name.'%')->get();
             // dd($bussines); 
             return json_encode(BussinesResource::collection($bussines), JSON_UNESCAPED_UNICODE);
         }
-        //province_name and on of(category_id,regoin_name,bussines_name)
-        elseif($request->province_name && ($request->category_id || $request->regoin_name || $request->bussines_name)){
-            $bussines = Bussines::where('city',$request->province_name)->orWhere('category_id',$request->category_id)->orWhere('name','like','%'.$request->name.'%')->get();
+        //city_id and one of(category_id,regoin_id,bussines_name)
+        elseif($request->city_id && ($request->category_id || $request->regoin_id || $request->bussines_name)){
+            $bussines = Bussines::where('city_id',$request->city_id)->orWhere('category_id',$request->category_id)->orWhere('regoin_id',$request->regoin_id)->orWhere('name','like','%'.$request->name.'%')->get();
             // dd($bussines); 
             return json_encode(BussinesResource::collection($bussines), JSON_UNESCAPED_UNICODE);
         }
@@ -111,11 +108,10 @@ class SearcherController extends Controller
         $interest = Interest::where('searcher_id',$searcher_id)->get(); 
         if(!$interest->isEmpty()){
             
-            $city = $interest[0]->city; 
+            $city = $interest[0]->city_id; 
             // dd($city); 
-            $bussines = Bussines::where([['city',$city],['name','like','%'.$bussines_name.'%']])->orWhere('name','like','%'.$bussines_name.'%')->get();
-            
-            return BussinesResource::collection($bussines); 
+            $bussines = Bussines::where([['city_id',$city_id],['name','like','%'.$bussines_name.'%']])->orWhere('name','like','%'.$bussines_name.'%')->get();
+            return json_encode(BussinesResource::collection($bussines), JSON_UNESCAPED_UNICODE);
             
         }else {
             return response()->json(['flga'=>'0']);
@@ -140,11 +136,9 @@ class SearcherController extends Controller
         $interest = Interest::where('searcher_id',$searcher_id)->get(); 
         if(!$interest->isEmpty()){
             
-            $city = $interest[0]->city; 
-            // dd($city); 
-            $bussines = Bussines::where([['city',$city],['category_id',$category_id]])->orWhere('category_id',$category_id)->get();
-            
-            return BussinesResource::collection($bussines); 
+            $city_id = $interest[0]->city_id; 
+            $bussines = Bussines::where([['city_id',$city_id],['category_id',$category_id]])->orWhere('category_id',$category_id)->get();
+            return json_encode(BussinesResource::collection($bussines), JSON_UNESCAPED_UNICODE);
             
         }else {
             return response()->json(['flga'=>'0']);
@@ -157,14 +151,14 @@ class SearcherController extends Controller
     public function default_offer_search(Request $request , $searcher_id){
         $interest = Interest::where('searcher_id',$searcher_id)->get(); 
         if(!$interest->isEmpty()){
-            $regoins = explode(',',$interest[0]->regoins);
-            $categories = explode(',',$interest[0]->categories);
-            $city = $interest[0]->city; 
-            $bussines = Bussines::where('city',$city)->
-                whereIn('category_id',$categories)->
-                whereIn('regoin',$regoins)->get(['id'])->toArray();
-                
-            $offers = Offer::whereIn('id',$bussines)->get(); 
+            $regoins_ids = explode(',',$interest[0]->regoins_ids);
+            $categories_ids = explode(',',$interest[0]->categories_ids);
+            $city_id = $interest[0]->city_id; 
+            $bussines = Bussines::where('city_id',$city_id)->
+                whereIn('category_id',$categories_ids)->
+                whereIn('regoin_id',$regoins_ids)->get(['id'])->toArray();
+            
+            $offers = Offer::whereIn('bussines_id',$bussines)->get(); 
             return json_encode( OfferResource::collection($offers), JSON_UNESCAPED_UNICODE); 
         }else {
             return response()->json(['flga'=>'0']);
@@ -177,7 +171,7 @@ class SearcherController extends Controller
     // search by(name,province, regoins , category)
     public function search_offer(Request $request){
         //only bussiness name  
-        if($request->bussines_name && !$request->category_id && !$request->province_name && !$request->regoin_name){
+        if($request->bussines_name && !$request->category_id && !$request->city_id && !$request->regoin_id){
             
             $bussines = Bussines::where('name','like','%'.$request->bussines_name.'%')->get(['id']);
             
@@ -191,7 +185,7 @@ class SearcherController extends Controller
                return response()->json(['flag'=>'0'],400); 
             }
         }// only category
-        elseif($request->category_id && !$request->bussines_name && !$request->province_name && !$request->regoin_name){
+        elseif($request->category_id && !$request->bussines_name && !$request->city_id && !$request->regoin_id){
             $bussines = Bussines::where('category_id',$request->category_id)->get(['id']);
             $ids = $bussines->toArray();
             
@@ -205,9 +199,9 @@ class SearcherController extends Controller
  
         }
         // all fields
-        elseif($request->province_name && $request->category_id && $request->regoin_name && $request->bussines_name){
+        elseif($request->city_id && $request->category_id && $request->regoin_id && $request->bussines_name){
             // dd('all');
-            $bussines = Bussines::where('city',$request->province_name)->Where('regoin',$request->regoin_name)->Where('category_id',$request->category_id)->Where('name','like','%'.$request->name.'%')->get(['id']);
+            $bussines = Bussines::where('city',$request->city_id)->Where('regoin_id',$request->regoin_id)->Where('category_id' , $request->category_id)->Where('name','like','%'.$request->name.'%')->get(['id']);
             $ids = $bussines->toArray();
             
             $offers = Offer::whereIn('bussines_id',$ids)->get(); 
@@ -217,9 +211,9 @@ class SearcherController extends Controller
             }else {
                return response()->json(['flag'=>'0'],400); 
             }
-        }//province_name and on of(category_id,regoin_name,bussines_name)
-        elseif( $request->province_name && ($request->category_id || $request->regoin_name || $request->bussines_name)){
-            $bussines = Bussines::where('city',$request->province_name)->orWhere('category_id',$request->category_id)->orWhere('name','like','%'.$request->name.'%')->get(['id']);
+        }//city_id and on of(category_id,regoin_id,bussines_name)
+        elseif( $request->city_id && ($request->category_id || $request->regoin_id || $request->bussines_name)){
+            $bussines = Bussines::where('city_id',$request->city_id)->orWhere('category_id',$request->category_id)->orWhere('regoin_id',$request->regoin_id)->orWhere('name','like','%'.$request->name.'%')->get(['id']);
             $ids = $bussines->toArray();
             
             $offers = Offer::whereIn('bussines_id',$ids)->get(); 

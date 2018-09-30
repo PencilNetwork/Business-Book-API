@@ -36,12 +36,19 @@ class Bussines extends Model
     {
         return $this->hasMany("App\Rating",'bussines_id','id');
     }
+    public function city()
+    {
+        return $this->belongsTo("App\City","city_id","id");
+    }
+    public function regoin()
+    {
+        return $this->belongsTo("App\Regoin","regoin_id","id");
+    }
 
-    
     public function averageRating(){
         $ratings = $this->ratings;
 
-        if (!$ratings->isEmpty()) {
+        if(!$ratings->isEmpty()) {
             $sum = 0;
 
             foreach ($ratings as $rating) {

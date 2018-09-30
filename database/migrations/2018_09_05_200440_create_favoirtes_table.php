@@ -24,7 +24,7 @@ class CreateFavoirtesTable extends Migration
 
             
 
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

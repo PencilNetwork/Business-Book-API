@@ -12,9 +12,9 @@ class InterestResource extends Resource
         return [
             'id' => $this->id,
             'searcher_id' => $this->searcher_id,
-            'categories' => $this->categories,
-            'city' => $this->city,
-            'regoins' => $this->regoins,
+            'categories' => $this->categories_ids,
+            'city' => $this->city_id,
+            'regoins' => $this->regoins_ids,
             // 'created_at' => (string) $this->created_at,
             // 'updated_at' => (string) $this->updated_at,
         ];

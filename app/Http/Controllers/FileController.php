@@ -10,7 +10,8 @@ class FileController extends Controller
 {
     public function create( ){
         return view('files.create');
-    }    
+    }   
+     
     // update  one  related file 
     public function update(File $file  ,Request $request){
         $validator = \Validator::make($request->all(), [

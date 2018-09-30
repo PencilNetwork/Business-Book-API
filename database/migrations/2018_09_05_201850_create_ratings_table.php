@@ -23,7 +23,7 @@ class CreateRatingsTable extends Migration
             $table->integer('searcher_id')->unsigned();
             $table->foreign('searcher_id')->references('id')->on('searchers')->onDelete('cascade');
 
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

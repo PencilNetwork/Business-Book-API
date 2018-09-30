@@ -17,8 +17,6 @@ class CreateBussinesTable extends Migration
             $table->string('description'); 
             $table->string('logo')->nullable(); 
             $table->string('contact_number'); 
-            $table->string('city'); 
-            $table->string('regoin')->nullable(); 
             $table->string('address'); 
             $table->string('langitude'); 
             $table->string('lattitude'); 
@@ -28,6 +26,12 @@ class CreateBussinesTable extends Migration
             
             $table->integer('category_id')->unsigned(); 
             $table->foreign('category_id')->references('id')->on('categories');
+
+            $table->integer('city_id')->unsigned(); 
+            $table->foreign('city_id')->references('id')->on('cities');
+
+            $table->integer('regoin_id')->unsigned()->nullable(); 
+            $table->foreign('regoin_id')->references('id')->on('regoins');
 
             $table->timestamps();
         });

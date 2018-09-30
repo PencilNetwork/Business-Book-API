@@ -19,7 +19,7 @@ class CreateOwnersTable extends Migration
             $table->string('email')->unique(); 
             $table->string('password'); 
             $table->string('token'); 
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

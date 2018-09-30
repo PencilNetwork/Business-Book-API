@@ -11,13 +11,15 @@ class OfferController extends Controller
 {
 
     public function index(Request $request){
-        return  OfferResource::collection(Offer::where('bussines_id',$request->bussines_id)->get()); 
+        return json_encode(OfferResource::collection(Offer::where('bussines_id',$request->bussines_id)->get()) ,JSON_UNESCAPED_UNICODE) ;
+
     }
     public function create(){
         return view('offer.create'); 
     }
     public function show(Offer $offer){
-        $offer= new OfferResource($offer);
+        $offer= json_encode(new OfferResource($offer) ,JSON_UNESCAPED_UNICODE);
+        
         if($offer){
             return $offer;
         }else {

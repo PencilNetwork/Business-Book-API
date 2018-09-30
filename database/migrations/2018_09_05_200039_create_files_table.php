@@ -21,7 +21,7 @@ class CreateFilesTable extends Migration
             $table->integer('bussines_id')->unsigned();
             $table->foreign('bussines_id')->references('id')->on('bussines')->onDelete('cascade');
 
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

@@ -14,6 +14,7 @@ Route::get('/owner/signup','OwnerController@signup_test');
 Route::post('/owner/signup','OwnerController@signup'); 
 // Route::get('/owner/{owner}',"OwnerController@show"); // owner (show and edit) 
 
+
 // reset passwrod for owner 
 Route::get('/owner/mail_test',"OwnerController@send_mail_test"); 
 Route::post('/owner/mail',"OwnerController@send_mail"); 
@@ -22,10 +23,13 @@ Route::post('/owner/reset',"OwnerController@reset_pass");
 
 // Bussines routes (show,update,store,destroy)
 Route::get('/bussines/create',"BussinesController@create"); 
-Route::get('/bussines/{bussines}/edit','BussinesController@edit');
 Route::post('/bussines/store',"BussinesController@store");
+
 Route::get('/bussines/{bussines}',"BussinesController@show"); 
+
+Route::get('/bussines/{bussines}/edit','BussinesController@edit');
 Route::post('/bussines/{bussines}','BussinesController@update');
+
 
 
 // files routes 
@@ -60,12 +64,13 @@ Route::get('/offers/{offer}/edit','OfferController@edit');
 // Favoitre Routes 
 Route::get('/favoirtes/create',"FavoirteController@create"); 
 Route::post('/favoirtes',"FavoirteController@store") ; 
-Route::delete('/favoirtes/{favoirte}',"FavoirteController@destroy"); 
+Route::get('/favoirtes/delete/{favoirte}',"FavoirteController@destroy"); 
 Route::get('/favoirtes/{searcher_id}',"FavoirteController@index"); // show all favourtes for on searcher 
+Route::get('/favoirtes/{searcher_id}/{bussines_id}', "FavoirteController@check_bussines_favoirte"); // check if bussines in favoirte or not for this searcher 
 
 // Ratings  Routes 
 Route::get('/ratings/store_test',"RatingController@store_test");
-Route::post('/ratings',"RatingController@store");
+Route::post('/ratings',"RatingController@store_or_update");
 
 Route::get('/ratings/{rating}/edit',"RatingController@update_test");
 Route::post('/ratings/{rating}',"RatingController@update") ; 
@@ -90,29 +95,24 @@ Route::post('/interests/{interest}' , "InterestController@update");
 
 // category ,cities , regoins  routes 
 Route::get('/categories','CategoryController@index') ; 
-Route::get('/provinces','CategoryController@provinces') ; 
-Route::get('/regoins/{province_id}','CategoryController@regoins');//return regoins for one province  
+Route::get('/cities','CityController@cities') ; 
+Route::get('/regoins/{city_id}','RegoinController@regoins');//return regoins for one city  
 
 
 // search offers  routes 
-Route::get('/offers/default_search/{searcher_id}',"SearcherController@default_offer_search");
-Route::get ('/offer/search_test',"SearcherController@test_search");
-Route::post('/offer/search',"SearcherController@test_search_offer");
+Route::get('/offer/default_search/{searcher_id}',"SearcherController@default_offer_search");
+Route::get ('/offer/search_test',"SearcherController@test_search_offer");
+Route::post('/offer/search',"SearcherController@search_offer");
 
 // search  bussines routes  
-Route::get('/search/default_search/{searcher_id}',"SearcherController@default_bussines_search");
-Route::post('/search',"SearcherController@search_bussines");
-Route::get('/search',"SearcherController@test_bussines_search");
+Route::get('/bussines/default_search/{searcher_id}',"SearcherController@default_bussines_search");
+Route::post('/bussines_search',"SearcherController@search_bussines");
+Route::get('/bussines/search/test',"SearcherController@test_bussines_search");
 // Route::get('search/search_by_name','SearcherController@search_by_name');
 // Route::post('/search/bussines_name',"SearcherController@bussines_name");
-// Route::get('search/search_by_category','SearcherController@search_by_category');
-// Route::post('/search/category',"SearcherController@category");
+Route::get('/bussines/search/search_by_category','SearcherController@search_by_category');
+Route::post('/bussines/search/category',"SearcherController@category");
 
 
-
-
-// insert province  and regoins in db 
-Route::get('/province', "ProvinceController@insert_province");
-Route::get('/regoins', "RegoinController@insert_regoins");
 
 

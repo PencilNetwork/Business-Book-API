@@ -28,12 +28,13 @@ class FileResource extends Resource
          //    }
          // }
         return [
+            'data'=> [
             'id' => $this->id,
             'image' => "https://pencilnetwork.com/bussines_book/public/images/".$this->image,
             'bussines_id' => $this->bussines_id,
             // 'created_at' => (string) $this->created_at,
             // 'updated_at' => (string) $this->updated_at,
-        ];
+        ]];
         // return parent::toArray($request);
     }
 }

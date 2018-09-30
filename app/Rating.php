@@ -8,6 +8,7 @@ class Rating extends Model
 {
     //
     protected $guarded = [];
+    public $timestamps = false;
     public function bussines()
     {
         return $this->belongsTo("App\Bussines","bussines_id","id");

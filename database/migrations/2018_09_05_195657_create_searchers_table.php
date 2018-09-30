@@ -19,8 +19,7 @@ class CreateSearchersTable extends Migration
             $table->string('name');
             $table->string('token');
             $table->string('email')->unique()->nullable();
-
-            // $table->timestamps();
+            $table->timestamps();
         });
         
     }

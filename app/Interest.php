@@ -10,7 +10,7 @@ class Interest extends Model
     protected $guarded = [];
     public function searcher()
     {
-        return $this->belongsTo('App\Searcher');
+        return $this->belongsTo(Searcher::class);
     }
 
 }

@@ -9,11 +9,9 @@ class FavoirteController extends Controller
 {
      
     public function index(Request $request, $searcher_id){
-        
         $favoirtes =Favoirte::where('searcher_id',$searcher_id)->get(); 
-        
-    	if($favoirtes){
-            return  FavoirteResource::collection($favoirtes);
+        if($favoirtes){
+            return response()->json(["data"=>json_encode(FavoirteResource::collection($favoirtes) ,JSON_UNESCAPED_UNICODE)] );
         }else{
             return response()->json(['flag'=>'0'],400);
         }
@@ -38,13 +36,24 @@ class FavoirteController extends Controller
         }
     }
 
-    public function delete(Favoirte $favoirte){
+    public function destroy(Favoirte $favoirte){
         if($favoirte->delete()){
             return response()->json(['flag'=>'1'],201);
         }else{
             return response()->json(['flag'=>'0'],400);
         }
     }
-
+    public function check_bussines_favoirte(Request $request , $searcher_id, $bussines_id)
+    {
+        $favoirte = Favoirte::where('searcher_id',$searcher_id)->where('bussines_id',$bussines_id)->first();
+        if($favoirte){
+            return response()->json(['flag'=>"1"]);
+        } else {
+            return response()->json(['flag'=>"0"]);
+        }
+    }
+    // return favoirtes for one searcher 
+    // public function favoirtes(Request $request,){
+    // }
     
 }
