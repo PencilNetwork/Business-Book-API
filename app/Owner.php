@@ -1,9 +1,8 @@
 <?php
 
 namespace App;
-
+use App\Owner; 
 use Illuminate\Database\Eloquent\Model;
-use App\Bussines; 
 class Owner extends Model
 {
     protected $table = 'owners';

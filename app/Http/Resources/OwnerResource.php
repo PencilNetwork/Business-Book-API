@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
-
+use App\Bussines ; 
 use Illuminate\Http\Resources\Json\Resource;
 // use App\Http\Resources\BussinesResource; 
 
@@ -16,18 +16,12 @@ class OwnerResource extends Resource
     public function toArray($request)
     {
         return [
-            'data'=> [
-            'owner_id'    => $this->id,
+            'owner_id'  => $this->id,
             'name'  => $this->name,
             'email' => $this->email,
             'password'  => $this->password,
             'token'     => $this->token,
-            // 'bussines' => BussinesResource::collection($this->bussines) ,
-            // 'bussines' => new BussinesResource($this->bussines),
-            'bussines' => $this->bussines,
-            // 'created_at' => (string) $this->created_at,
-            // 'updated_at' => (string) $this->updated_at,
-        ]];
-        // return parent::toArray($request);
+            'bussines' => new BussinesResource(Bussines::where('owner_id',$this->id)->first()),
+        ];
     }
 }

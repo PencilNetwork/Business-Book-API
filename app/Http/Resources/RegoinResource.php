@@ -15,11 +15,11 @@ class RegoinResource extends Resource
     public function toArray($request)
     {
          return  [
-            'data'=> [
+            
             'id' => $this->id,
             'name' => $this->name,
             'city_id' => $this->city_id,
-        ]];
+        ];
         // return parent::toArray($request);
     }
 }

@@ -15,10 +15,10 @@ class CityResource extends Resource
     public function toArray($request)
     {
         return  [
-            'data'=> [
+            
             'id' => $this->id,
             'name' => $this->name,
-        ]];
+        ];
         // return parent::toArray($request);
     }
 }

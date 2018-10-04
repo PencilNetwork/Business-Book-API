@@ -21,7 +21,7 @@ class RatingController extends Controller
             'rating'      =>'required',
             
         ]);
-        if ( $validator->fails() ) {
+        if( $validator->fails() ) {
             return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
         }
         $rating = Rating::where('bussines_id',$request->bussines_id)->where('searcher_id',$request->searcher_id)->first(); 

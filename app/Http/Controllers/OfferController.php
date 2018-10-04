@@ -9,19 +9,37 @@ use App\Offer;
 use App\Bussines;
 class OfferController extends Controller
 {
-
-    public function index(Request $request){
-        return json_encode(OfferResource::collection(Offer::where('bussines_id',$request->bussines_id)->get()) ,JSON_UNESCAPED_UNICODE) ;
-
+    /*not used*/
+    public function index(Request $request,$bussines_id){
+        $request['bussines_id']= \Route::current()->parameter('bussines_id');
+        $validator = \Validator::make($request->all(), [
+            'bussines_id' => 'required|exists:bussines,id|numeric',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
+        }
+        return OfferResource::collection(Offer::where('bussines_id',$request->bussines_id)->get()) ;
     }
+
     public function create(){
         return view('offer.create'); 
     }
-    public function show(Offer $offer){
-        $offer= json_encode(new OfferResource($offer) ,JSON_UNESCAPED_UNICODE);
+
+    // show one offer details 
+    /*not used*/
+    public function show(Request $request,$bussines_id){
+
+        $request['offer']= \Route::current()->parameter('offer');
+        $validator = \Validator::make($request->all(), [
+            'offer' => 'required|exists:offers,id|numeric',
+        ]);
         
-        if($offer){
-            return $offer;
+        if ( $validator->fails() ) {
+            return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
+        }
+        
+        if($offer = Offer::where('id',$request['offer'])->first()){
+            return new OfferResource($offer);
         }else {
             return response()->json(['flag'=>'0'],400);
         }
@@ -39,9 +57,9 @@ class OfferController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-            'caption' => 'required',
+            // 'caption' => 'required',
             'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg',
-            'bussines_id' => 'required|max:255',
+            'bussines_id' => 'required|exists:bussines,id|numeric',
         ]);
         if ( $validator->fails() ) {
             return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
@@ -63,22 +81,24 @@ class OfferController extends Controller
     }
 
 
-    public function update(Offer $offer ,Request $request){
+    public function update(Request $request, $offer ){
+        $request['offer']= \Route::current()->parameter('offer');
         $validator = \Validator::make($request->all(), [
-            // 'caption' => 'required',
+            'offer' => 'required|exists:offers,id|numeric',
             'image' =>'image|mimes:jpeg,png,jpg,gif,svg',
-            // 'bussines_id' => 'required',
         ]);
+        
         if ( $validator->fails() ) {
-            return response()->json( [ 'flage'=>'0' ,'errors' => $validator->errors() ], 400 );
+            return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
         }
-        $inputs = $request->all();
+    
+        $inputs = $request->only(['caption']);
         if($request->image){
             $imageName = time().'.'.request()->image->getClientOriginalName();
             request()->image->move(public_path('images'), $imageName);
             $inputs['image']  = $imageName ; 
         } 
-        if($offer->update($inputs)){
+        if(Offer::where('id',$offer)->update($inputs)){
             return response()->json( [ 'flag'=>'1']);
         }else{
             return response()->json( [ 'flag'=>'0']);
@@ -93,8 +113,15 @@ class OfferController extends Controller
         }
     }
 
-    public function  destroy(Offer $offer){
-        if($offer->delete()){
+    public function  destroy( Request $request,$offer ){
+        $req['offer']= \Route::current()->parameter('offer');
+        $validator = \Validator::make($req, [
+            'offer' => 'required|exists:offers,id|numeric',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
+        }
+        if(Offer::where('id',$offer)->delete()){
             return response()->json(['flag'=>'1'],201);
         }else{
             return response()->json(['flag'=>'0'],400);

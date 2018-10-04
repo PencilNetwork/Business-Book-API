@@ -10,12 +10,14 @@ class RegoinController extends Controller
 {
     // return all regoins for one  city
     public function regoins (Request $request,$city_id ){
-        // $validator = \Validator::make($request->all(), [
-        //     'city_id' => 'required',
-        // ]);
-        // if ( $validator->fails() ) {
-        //     return response()->json( [ 'flage'=>'0' ,'errors' => $validator->errors() ], 400 );
-        // }
-        return json_encode(RegoinResource::collection(Regoin::where('city_id',$city_id)->get()) ,JSON_UNESCAPED_UNICODE) ;
+        $req =$request->all();
+        $req['city_id']= \Route::current()->parameter('city_id');
+        $validator = \Validator::make($req, [
+            'city_id' => 'required|exists:cities,id|numeric',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
+        }
+        return RegoinResource::collection(Regoin::where('city_id',$city_id)->get()) ;
     }
 }

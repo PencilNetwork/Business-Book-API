@@ -15,14 +15,14 @@ class RatingResource extends Resource
     public function toArray($request)
     {
         return [
-            'data'=> [
+            
             'id' => $this->id,
             'searcher_id' => $this->searcher_id,
             'bussines_id' => $this->bussines_id,
             'rating' => $this->rating,
             // 'created_at' => (string) $this->created_at,
             // 'updated_at' => (string) $this->updated_at,
-        ]];
+        ];
         // return parent::toArray($request);
     }
 }

@@ -13,7 +13,7 @@ class CityController extends Controller
     // return all provinces
     public function cities(){
         // return CityResource::collection(City::all()) ;
-        return json_encode(CityResource::collection(City::all()) ,JSON_UNESCAPED_UNICODE) ;
+        return CityResource::collection(City::all());
     }
 
     

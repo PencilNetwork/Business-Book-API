@@ -15,12 +15,12 @@ class CategoryResource extends Resource
     public function toArray($request)
     {
         return [
-            'data'=> [
+            
             'id' => $this->id,
             'name' => $this->name,
             // 'created_at' => (string) $this->created_at,
             // 'updated_at' => (string) $this->updated_at,
-        ]];
+        ];
         // return parent::toArray($request);
     }
 }

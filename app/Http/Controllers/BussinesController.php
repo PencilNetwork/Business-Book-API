@@ -12,10 +12,22 @@ class BussinesController extends Controller
     public function create(){
         return view('bussines.create');
     }
+    public function test(){
+        return BussinesResource::collection(Bussines::all()); 
+    }
+      
     //show, edit 
-    public function show (Bussines $bussines){
-        $bussines= json_encode(new BussinesResource($bussines), JSON_UNESCAPED_UNICODE);
-        // $bussines= new BussinesResource($bussines);
+    public function show (Request $request , $bussines ){
+        $req =$request->all();
+        $req['bussines']= \Route::current()->parameter('bussines');
+
+        $validator = \Validator::make($req, [
+            'bussines' => 'required|exists:bussines,id|numeric',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
+        }
+        $bussines= new BussinesResource(Bussines::findOrFail($bussines));
         if($bussines){
             return $bussines;
         }else {
@@ -39,16 +51,16 @@ class BussinesController extends Controller
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
             'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg',
-            'description' => 'required|max:255',
+            'description' => 'required',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'contact_number' => 'required',
-            'city_id' => 'required',
-            // 'regoin_id' => 'required',
+            'contact_number' => 'required|numeric',
+            'city_id' => 'required|numeric|exists:cities,id',
+            'regoin_id' => 'nullable',
             'address' => 'required',
             'langitude' => 'required',
             'lattitude' => 'required',
-            'category_id' => 'required',
-            'owner_id' => 'required',
+            'category_id' => 'required|numeric|exists:categories,id',
+            'owner_id' => 'required|exists:owners,id|numeric',
         ]);
         if ( $validator->fails() ) {
             return response()->json( [ 'flage'=>'0' ,'errors' => $validator->errors() ], 400 );
@@ -69,7 +81,7 @@ class BussinesController extends Controller
         if($b = Bussines::create($bussines)){
             $response = [
                 'flag'=>1,
-                'data'=> json_encode( new BussinesResource($b ), JSON_UNESCAPED_UNICODE)
+                'data'=>  new BussinesResource($b )
             ];
         }else {
             return response()->json([ 'flage'=>'0']);
@@ -86,17 +98,17 @@ class BussinesController extends Controller
     public function update(Bussines $bussines ,Request $request){
         $validator = \Validator::make($request->all(), [
             'name' => 'required',
-            'image' =>'image|mimes:jpeg,png,jpg,gif,svg',
-            'description' => 'required|max:255',
+            'image' =>'required|image|mimes:jpeg,png,jpg,gif,svg',
+            'description' => 'required',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
-            'contact_number' => 'required',
-            'city_id' => 'required',
-            // 'regoin_id' => 'required',
+            'contact_number' => 'required|numeric',
+            'city_id' => 'required|numeric|exists:cities,id',
+            'regoin_id' => 'nullable|exists:regoins,id|numeric',
             'address' => 'required',
             'langitude' => 'required',
             'lattitude' => 'required',
-            'category_id' => 'required',
-            'owner_id' => 'required',
+            'category_id' => 'required|numeric',
+            'owner_id' => 'required|exists:owners,id|numeric',
         ]);
         $inputs = $request->all();
         
@@ -116,9 +128,9 @@ class BussinesController extends Controller
             return response()->json(['flag'=>'0'],400);
         }
     }
-    public function  destroy(Bussines $bussines){
-        $bussines->destroy(); 
-    }
+    // public function  destroy(Bussines $bussines){
+    //     $bussines->destroy(); 
+    // }
     
 
 }

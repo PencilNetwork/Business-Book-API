@@ -1,4 +1,4 @@
-<form method='post' action  ='{{url("/api/interests/$interest->id")}}' enctype="multipart/form-data" >
+<form method='post' action  ='{{url("/api/interests/$interest->searcher_id")}}' enctype="multipart/form-data" >
     <!-- {{method_field('post')}} -->
     {{csrf_field()}}
     <input name = 'searcher_id'  type = 'text' value="{{ $interest->searcher_id }}"/>

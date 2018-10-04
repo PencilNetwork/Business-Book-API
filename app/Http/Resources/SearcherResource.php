@@ -15,7 +15,6 @@ class SearcherResource extends Resource
     public function toArray($request)
     {
         return [
-            'data'=> [
             'id' => $this->id,
             'name' => $this->name,
             'social_id' => $this->social_id,
@@ -24,7 +23,7 @@ class SearcherResource extends Resource
             'email' =>  $this->email,
             // 'updated_at' => (string) $this->updated_at,
             // 'created_at' => (string) $this->created_at,
-        ]];
+        ];
         // return parent::toArray($request);
     }
 }

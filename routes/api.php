@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 
 
+Route::get("test_owner/{bussines}","OwnerController@test"); 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
@@ -18,10 +19,15 @@ Route::post('/owner/signup','OwnerController@signup');
 // reset passwrod for owner 
 Route::get('/owner/mail_test',"OwnerController@send_mail_test"); 
 Route::post('/owner/mail',"OwnerController@send_mail"); 
+
+Route::group(['middleware' => ['web']], function () {
+	Route::get('/owner/reset_page',"OwnerController@reset_page"); 
+});
 Route::post('/owner/reset',"OwnerController@reset_pass"); 
 
 
 // Bussines routes (show,update,store,destroy)
+Route::get('/bussines/test',"BussinesController@test"); 
 Route::get('/bussines/create',"BussinesController@create"); 
 Route::post('/bussines/store',"BussinesController@store");
 
@@ -48,9 +54,9 @@ Route::delete('/files/{file}','FileController@destroy');
 // Offer routes 
 // Route::apiResource('offers',"OfferController",["only"=>['store','']]); 
 Route::get('/offers/create','OfferController@create'); // test create offer 
-Route::get('/offers','OfferController@index'); // index :show offers for one bussines  
+/*not used*/ Route::get('/offers/bussines/{bussines_id}','OfferController@index'); // index :show offers for one bussines  
+/*not used*/Route::get('/offers/{offer}','OfferController@show'); // show  one offer details 
 Route::post('/offers','OfferController@store'); // store 
-Route::get('/offers/{offer}','OfferController@show');
 
 Route::get('/offers/delete/{offer}','OfferController@test_delete');
 Route::delete('/offers/{offer}','OfferController@destroy'); // delete one offer 
@@ -64,7 +70,9 @@ Route::get('/offers/{offer}/edit','OfferController@edit');
 // Favoitre Routes 
 Route::get('/favoirtes/create',"FavoirteController@create"); 
 Route::post('/favoirtes',"FavoirteController@store") ; 
-Route::get('/favoirtes/delete/{favoirte}',"FavoirteController@destroy"); 
+// Route::get('/favoirtes/delete/{favoirte}',"FavoirteController@destroy"); 
+Route::delete('/favoirtes/{searcher_id}/{bussines_id}', "FavoirteController@destroy"); // check if bussines in favoirte or not for this searcher 
+Route::get('/favoirtes/test_delete',"FavoirteController@test_delete");
 Route::get('/favoirtes/{searcher_id}',"FavoirteController@index"); // show all favourtes for on searcher 
 Route::get('/favoirtes/{searcher_id}/{bussines_id}', "FavoirteController@check_bussines_favoirte"); // check if bussines in favoirte or not for this searcher 
 
@@ -90,7 +98,7 @@ Route::post('/interests' , "InterestController@store");
 Route::get('/interests/{searcher}' , "InterestController@show"); // retrieve searcher's intersets  
 
 Route::get('/interests/{interest}/edit',"InterestController@update_test");
-Route::post('/interests/{interest}' , "InterestController@update");  
+Route::post('/interests/{searcher_id}', "InterestController@update");  
 
 
 // category ,cities , regoins  routes 

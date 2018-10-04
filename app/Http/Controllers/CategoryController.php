@@ -10,9 +10,6 @@ class CategoryController extends Controller
 {
     // dispaly all cats 
     public function index (){
-        return json_encode(CategoryResource::collection(Category::all()), JSON_UNESCAPED_UNICODE );
-    }
-    
-    
-    
+        return CategoryResource::collection(Category::all());
+    } 
 }
