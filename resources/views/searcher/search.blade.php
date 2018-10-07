@@ -5,5 +5,6 @@
     <input name = 'city_id'  type = 'text' placeholder="city_id" /><br> 
     <input name = 'regoin_id'  type = 'text'  placeholder="regoin_id" /><br> 
     <input name = 'category_id'  type = 'text' placeholder="category_id" /><br> 
+    <input name = 'page_number'  type = 'text' placeholder="page number" /><br> 
     <input type = 'submit' />
 </form>

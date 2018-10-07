@@ -13,7 +13,7 @@ class BussinesController extends Controller
         return view('bussines.create');
     }
     public function test(){
-        return BussinesResource::collection(Bussines::all()); 
+        return BussinesResource::collection(Bussines::paginate()); 
     }
       
     //show, edit 

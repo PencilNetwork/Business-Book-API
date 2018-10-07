@@ -76,6 +76,7 @@ Route::get('/favoirtes/test_delete',"FavoirteController@test_delete");
 Route::get('/favoirtes/{searcher_id}',"FavoirteController@index"); // show all favourtes for on searcher 
 Route::get('/favoirtes/{searcher_id}/{bussines_id}', "FavoirteController@check_bussines_favoirte"); // check if bussines in favoirte or not for this searcher 
 
+
 // Ratings  Routes 
 Route::get('/ratings/store_test',"RatingController@store_test");
 Route::post('/ratings',"RatingController@store_or_update");
@@ -102,7 +103,9 @@ Route::post('/interests/{searcher_id}', "InterestController@update");
 
 
 // category ,cities , regoins  routes 
-Route::get('/categories','CategoryController@index') ; 
+Route::get('/categories','CategoryController@index') ;  // list cats 
+Route::get('/categories/insert','CategoryController@insert_categories') ;  // list cats 
+
 Route::get('/cities','CityController@cities') ; 
 Route::get('/regoins/{city_id}','RegoinController@regoins');//return regoins for one city  
 
@@ -111,6 +114,7 @@ Route::get('/regoins/{city_id}','RegoinController@regoins');//return regoins for
 Route::get('/offer/default_search/{searcher_id}',"SearcherController@default_offer_search");
 Route::get ('/offer/search_test',"SearcherController@test_search_offer");
 Route::post('/offer/search',"SearcherController@search_offer");
+
 
 // search  bussines routes  
 Route::get('/bussines/default_search/{searcher_id}',"SearcherController@default_bussines_search");
