@@ -29,13 +29,19 @@ class FileController extends Controller
             return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
         }
         
-        // dd("ok");
-        if($request->image){
-            $imageName = time().'.'.request()->image->getClientOriginalName();
-            request()->image->move(public_path('images'), $imageName);
-        } 
+        if( $file = File::where('id' , $req['file'] )->first()) {
+            
+            if($request->image){
+                // delete old img 
+                $path = public_path('/images/'.$file->image); 
+                if(file_exists($path)){
+                    @unlink($path);
+                }
 
-        if( File::where('id' , $req['file'] )->update(['image'=>$imageName])) {
+                $imageName = time().'.'.request()->image->getClientOriginalName();
+                request()->image->move(public_path('images'), $imageName);
+                File::find($file->id)-> update(['image'=>$imageName]);
+            }
             return response()->json( [ 'flag'=>'1']);
         }else{
             return response()->json( [ 'flag'=>'0']);
@@ -74,14 +80,19 @@ class FileController extends Controller
     public function  destroy(Request $request){
         $req =$request->all();
         $req['file']= \Route::current()->parameter('file');
-        // dd($req['file']);
         $validator = \Validator::make($req, [
             'file' => 'required|exists:files,id|numeric',
         ]);
         if ( $validator->fails() ) {
             return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
         }
-        if(File::where('id',$req['file'])->delete()){
+        if($file = File::where('id',$req['file'])->first()){
+            // delete old img 
+            $path = public_path('/images/'.$file->image); 
+            if(file_exists($path)){
+                @unlink($path);
+            }
+            File::find($file->id)->delete(); 
             return response()->json(['flag'=>'1'],201);
         }else{
             return response()->json(['flag'=>'0'],400);

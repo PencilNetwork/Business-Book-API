@@ -52,7 +52,7 @@ class FavoirteController extends Controller
         $req =$request->all();
         $req['searcher_id']= \Route::current()->parameter('searcher_id');
         $req['bussines_id']= \Route::current()->parameter('bussines_id');
-        // dd($req); 
+        
         $validator = \Validator::make($req, [
             'searcher_id' => 'required|exists:searchers,id|numeric',
             'bussines_id' => 'required|exists:bussines,id|numeric',

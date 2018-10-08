@@ -71,7 +71,7 @@ Route::get('/offers/{offer}/edit','OfferController@edit');
 Route::get('/favoirtes/create',"FavoirteController@create"); 
 Route::post('/favoirtes',"FavoirteController@store") ; 
 // Route::get('/favoirtes/delete/{favoirte}',"FavoirteController@destroy"); 
-Route::delete('/favoirtes/{searcher_id}/{bussines_id}', "FavoirteController@destroy"); // check if bussines in favoirte or not for this searcher 
+Route::delete('/favoirtes/delete/{searcher_id}/{bussines_id}', "FavoirteController@destroy"); // check if bussines in favoirte or not for this searcher 
 Route::get('/favoirtes/test_delete',"FavoirteController@test_delete");
 Route::get('/favoirtes/{searcher_id}',"FavoirteController@index"); // show all favourtes for on searcher 
 Route::get('/favoirtes/{searcher_id}/{bussines_id}', "FavoirteController@check_bussines_favoirte"); // check if bussines in favoirte or not for this searcher 
@@ -89,7 +89,8 @@ Route::get('/ratings/{bussines}',"RatingController@bussines_rating");
 // searcher routes  
 Route::get('/searchers/login_test',function(){return view('searcher.login');});
 Route::post('/searchers/login' , "SearcherController@login");  
-
+Route::post('/searchers/update_token',"SearcherController@update_token"); 
+Route::get('/searchers/update_token',"SearcherController@test_update_token"); 
 
 
 // intersets routes 
@@ -111,13 +112,13 @@ Route::get('/regoins/{city_id}','RegoinController@regoins');//return regoins for
 
 
 // search offers  routes 
-Route::get('/offer/default_search/{searcher_id}',"SearcherController@default_offer_search");
+Route::get('/offer/default_search/{searcher_id}/{page_number}',"SearcherController@default_offer_search");
 Route::get ('/offer/search_test',"SearcherController@test_search_offer");
 Route::post('/offer/search',"SearcherController@search_offer");
 
 
 // search  bussines routes  
-Route::get('/bussines/default_search/{searcher_id}',"SearcherController@default_bussines_search");
+Route::get('/bussines/default_search/{searcher_id}/{page_number}',"SearcherController@default_bussines_search");
 Route::post('/bussines_search',"SearcherController@search_bussines");
 Route::get('/bussines/search/test',"SearcherController@test_bussines_search");
 // Route::get('search/search_by_name','SearcherController@search_by_name');

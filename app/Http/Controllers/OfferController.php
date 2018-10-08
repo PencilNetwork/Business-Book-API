@@ -93,12 +93,19 @@ class OfferController extends Controller
         }
     
         $inputs = $request->only(['caption']);
-        if($request->image){
-            $imageName = time().'.'.request()->image->getClientOriginalName();
-            request()->image->move(public_path('images'), $imageName);
-            $inputs['image']  = $imageName ; 
-        } 
-        if(Offer::where('id',$offer)->update($inputs)){
+        
+        if($offer = Offer::where('id',$offer)->first()){
+            if($request->image){
+                // delete old img 
+                $path = public_path('/images/'.$offer->image); 
+                if(file_exists($path)){
+                    @unlink($path);
+                }
+                $imageName = time().'.'.request()->image->getClientOriginalName();
+                request()->image->move(public_path('images'), $imageName);
+                $inputs['image']  = $imageName ; 
+            } 
+            Offer::find($offer->id)->update($inputs); 
             return response()->json( [ 'flag'=>'1']);
         }else{
             return response()->json( [ 'flag'=>'0']);
@@ -121,7 +128,14 @@ class OfferController extends Controller
         if ( $validator->fails() ) {
             return response()->json( [ 'flag'=>'0' ,'errors' => $validator->errors() ], 400 );
         }
-        if(Offer::where('id',$offer)->delete()){
+        $offer =Offer::where('id' , $req['offer'])->first(); 
+        if($offer){
+            // delete old img 
+            $path = public_path('/images/'.$offer->image); 
+            if(file_exists($path)){
+                @unlink($path);
+            } 
+            Offer::destroy($offer->id);
             return response()->json(['flag'=>'1'],201);
         }else{
             return response()->json(['flag'=>'0'],400);
