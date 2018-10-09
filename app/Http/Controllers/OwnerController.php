@@ -75,6 +75,7 @@ class OwnerController extends Controller
             return response()->json( [ 'flag'=>'0','errors' =>'owner not found' ]);
         }
         try{
+            
             \Mail::to($email)->send(new DemoMail($request->email) );
             return response()->json( [ 'flag'=>'1'] , 201 );
         }catch(Exception $e){

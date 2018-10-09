@@ -65,8 +65,6 @@ Route::post('/offers/{offer}','OfferController@update');
 Route::get('/offers/{offer}/edit','OfferController@edit');
 
 
-
-
 // Favoitre Routes 
 Route::get('/favoirtes/create',"FavoirteController@create"); 
 Route::post('/favoirtes',"FavoirteController@store") ; 
@@ -91,7 +89,6 @@ Route::get('/searchers/login_test',function(){return view('searcher.login');});
 Route::post('/searchers/login' , "SearcherController@login");  
 Route::post('/searchers/update_token',"SearcherController@update_token"); 
 Route::get('/searchers/update_token',"SearcherController@test_update_token"); 
-
 
 // intersets routes 
 Route::get('/interests/create' , "InterestController@create"); // retrieve searcher's intersets  

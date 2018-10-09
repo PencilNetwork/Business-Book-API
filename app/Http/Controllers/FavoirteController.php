@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB; 
 use Illuminate\Http\Request;
 use App\Favoirte;
+use App\Rating;
 use App\Http\Resources\FavoirteResource;
 class FavoirteController extends Controller
 {
@@ -69,6 +70,7 @@ class FavoirteController extends Controller
     // check if this  bussines in  in favoirtes or not 
     public function check_bussines_favoirte(Request $request , $searcher_id, $bussines_id)
     {
+        
         $req =$request->all();
         $req['searcher_id']= \Route::current()->parameter('searcher_id');
         $req['bussines_id']= \Route::current()->parameter('bussines_id');
@@ -82,10 +84,22 @@ class FavoirteController extends Controller
         }
 
         $favoirte = Favoirte::where('searcher_id',$searcher_id)->where('bussines_id',$bussines_id)->first();
+        $rate = Rating::where([['searcher_id',$searcher_id],['bussines_id',$bussines_id]])->first();
+        
         if($favoirte){
-            return response()->json(['flag'=>"1"]);
-        } else {
-            return response()->json(['flag'=>"0"]);
+            // retrive the rating which make it this user for  this bussines 
+            // user may not make rate for this bussines
+            if(!$rate){
+                return response()->json(['flag'=>"0"]);
+            }else {
+                return response()->json(['flag' => "1" , 'rating'=>$rate->rating]);
+            }
+        }else {
+            if(!$rate){
+                return response()->json(['flag'=>"0"]);
+            }else {
+                return response()->json(['flag' => "0" , 'rating'=>$rate->rating]);
+            } 
         }
     }
     

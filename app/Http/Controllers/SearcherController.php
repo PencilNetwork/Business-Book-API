@@ -11,8 +11,10 @@ use App\Interest;
 use App\Searcher; 
 use App\Bussines;
 use App\Offer; 
+use App\Rating; 
 class SearcherController extends Controller
 {
+    
     public function test_update_token(){
         return view('searcher.update_token');
     }
