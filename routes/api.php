@@ -23,6 +23,7 @@ Route::post('/owner/mail',"OwnerController@send_mail");
 Route::group(['middleware' => ['web']], function () {
 	Route::get('/owner/reset_page',"OwnerController@reset_page"); 
 });
+
 Route::post('/owner/reset',"OwnerController@reset_pass"); 
 
 

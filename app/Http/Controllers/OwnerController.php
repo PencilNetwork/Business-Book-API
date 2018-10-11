@@ -75,7 +75,7 @@ class OwnerController extends Controller
             return response()->json( [ 'flag'=>'0','errors' =>'owner not found' ]);
         }
         try{
-            
+            Owner::find($owner->id)->update(['updated_at'=>date_create(now())]);
             \Mail::to($email)->send(new DemoMail($request->email) );
             return response()->json( [ 'flag'=>'1'] , 201 );
         }catch(Exception $e){
@@ -89,17 +89,36 @@ class OwnerController extends Controller
     }
     // update  password in db
     public function reset_pass(Request $request){
-        
-        $request->validate([
+        $validator = \Validator::make($request->all(), [
             'email' => 'required',
             'password' => 'required|min:6',
         ]);
-    
-        $pass = DB::table('owners')->where('email',$request->email)->update(['password'=>$request->password]);
-        if($pass){ 
-            return 'ok reset password'; 
+        $email =  $request->email;
+        if($validator->fails()) {
+            \Session::flash('status', 'Enter Password More Than 6 or Equal Letters !'); 
+            return response()
+            ->view('owner.reset', compact('email'));
+        }
+           
+            // dd('in reste pass func');
+        $updated_at = Owner::where('email',$request->email)->first(['updated_at']);
+        $start  =$updated_at->updated_at ;
+        $end 	= date_create(now()); // Current time and date
+        $diff  	=  date_diff( $start, $end );
+        if($diff->d >= 1 || $diff->h > 2 ){
+            \Session::flash('status', 'you are reseting after 2 hours please  reset form application again!'); 
+            return response()
+            ->view('owner.reset', compact('email'));
+        }            
+        $reset = DB::table('owners')->where('email',$request->email)->update(['password'=>$request->password]);
+        if($reset){ 
+            \Session::flash('status', 'success!'); 
+            return response()
+            ->view('owner.reset', compact('email'));
         }else {
-            return 'failed reset password' ;             
+            \Session::flash('status', 'failed!'); 
+            return response()
+            ->view('owner.reset', compact('email'));
         }
     }
     
